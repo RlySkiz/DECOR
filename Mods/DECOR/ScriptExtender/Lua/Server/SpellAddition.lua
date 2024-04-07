@@ -1,5 +1,7 @@
--- add spells on game startup
 function OnSessionLoaded()
+
+    -- readthe 3rd party items
+    --readAllObjects()
 
     -- add spells for all partymembers
 

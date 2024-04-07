@@ -47,3 +47,50 @@ function getNameByUniqueMapkey(uniqueMapkey)
     local strippedString = string.sub(uniqueMapkey, 1, endPosition)
     return strippedString
 end
+
+
+function getPrefix(s)
+    return string.sub(s, 1, 5)
+end
+
+
+--- Retrieves the value of a specified property from an object or returns a default value if the property doesn't exist.
+-- @param obj           The object from which to retrieve the property value.
+-- @param propertyName  The name of the property to retrieve.
+-- @param defaultValue  The default value to return if the property is not found.
+-- @return              The value of the property if found; otherwise, the default value.
+function getPropertyOrDefault(obj, propertyName, defaultValue)
+    local success, value = pcall(function() return obj.propertyName end)
+    if success then
+        return value or defaultValue
+    else
+        return defaultValue
+    end
+end
+
+--- Checks if spell/object is currently loaded or not
+--- This is for checking entries within a table which holds tables of entries, which can be accessed with entry.name
+-- @param name          Name of the spell/object to check
+-- @param persVariable  Which persistantVariable to check
+function isSpellLoadedObject(name, persVariable)
+    if persVariable then
+        for _, entry in ipairs(persVariable) do
+            if entry.name == name then         
+                return true
+            end
+        end
+        return false
+    else
+        return false
+    end
+end
+
+function getMapKeyBySpell(name, persVariable)
+    if isSpellLoadedObject(name, persVariable) then
+        for _, entry in ipairs(persVariable) do
+            if entry.name == name then         
+                return entry.mapKey
+            end
+        end
+    end
+end
