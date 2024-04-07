@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="4" minor="0" revision="9" build="328" lslib_meta="v1,bswap_guids" />
+	<region id="Templates">
+		<node id="Templates">
+			<children>
+
+			<!-- Create new BASE template -->
+
+				<!-- DECOR_Template -->
+				<node id="GameObjects">
+					<attribute id="MapKey" type="FixedString" value="b00e3996-e5bd-47b7-8698-f18ded3e8ab4" /> -- REQUIRED -- This templates UUID
+					<attribute id="VisualTemplate" type="FixedString" value="a92ada31-bdae-40ea-95fb-5b47191f1cf4" /> -- REQUIRED -- The actual model UUID -- REQUIRES interact bones
+					<attribute id="PhysicsTemplate" type="FixedString" value="62a83981-5a5e-45c6-a3ed-02adaf864121" /> -- REQUIRED - But not needed for objects using this template
+					<attribute id="Stats" type="FixedString" value="DECOR_Template" /> -- REQUIRED - Additional stats created in DecorObjects.txt - Not needed for objects using this template
+					<attribute id="Type" type="FixedString" value="item" /> -- REQUIRED
+					<attribute id="CanBeMoved" type="bool" value="True" /> -- REQUIRED - Not needed for objects using the template
+					<attribute id="WalkThrough" type="bool" value="True" /> -- OPTIONAL
+					<attribute id="Radius" type="float" value="" />
+					<children>
+						<node id="OnUsePeaceActions">
+							<children>
+								<node id="Action">
+									<attribute id="ActionType" type="int32" value="14" /> -- REQUIRED
+								</node>
+							</children>
+						</node>
+						<!-- Optional Transform -->
+						<!-- <node id="Transform">
+							<attribute id="Position" type="fvec3" value="-717.439 3.535 -775.787" />
+							<attribute id="RotationQuat" type="fvec4" value="0 0 0 1" />
+							<attribute id="Scale" type="float" value="1" />
+						</node> -->
+					</children>
+				</node>
+
+-----------------------------------------------------------------------------------------------
+
+			<!-- Empty gameobject to copy/paste with DECOR_Template already attached -->
+				Mod checks for gameobjects having the same "Name" as the spell to actually being able to delete them so you don't accidentally delete anything else in world space
+				What we do is creating 2 handle UUIDs for the loca spellname and description and using the spellname hUUID as the gameobjects "DisplayName"
+
+				<!-- <node id="GameObjects">
+					<attribute id="Name" type="FixedString" value="" />
+					<attribute id="MapKey" type="FixedString" value="" />
+					<attribute id="ParentTemplateId" type="FixedString" value="b00e3996-e5bd-47b7-8698-f18ded3e8ab4" />
+					<attribute id="VisualTemplate" type="FixedString" value="" />
+					<attribute id="DisplayName" type="TranslatedString" handle="" version="1" />
+					<attribute id="Type" type="FixedString" value="item" />
+				</node> -->
+
+<!-- 
+ActionTypes:
+1	=	Open			|	For: Containers								|	Requires:	Empty Animation Attribute	|	Optional Conditions
+2	=	Useless in terms of it only being used on a single item which isn't in the game 
+3	=	Stairs?
+4	=	Throw								|	OnDestroyAction
+5	=	Generic Object Destroy Action		|	OnDestroyAction
+6	=	NOT IMPLEMENTED
+7	=	Consume Item													|	Requires:	Animation	Consume	StatsId	StatusDuration |	Optional Conditions	IsHiddenStatus
+8	=	Attack?															|	Requires:	Empty Animation Attribute	|	Optional Attributes	Conditions
+9	=	Open			|	For: Secret Doors							|	Requires:	Empty Animation Attribute	|	Optional Conditions	
+10	=	Death			|	OnDestroyAction								|	Requires: Bunch of Death Attributes like SurfaceType for BloodType (Oil for Oil Barrels for instace)
+11	=	Read			|	For: Books									|	Requires:	Empty Animation Attribute + BookId	|	Optional Conditions
+12	=	Use				|	For: Items
+13	=	|
+14	=	Sit				|	For: Chairs/Benches							|	Requires:	
+15	=	Sleep/Lie down	|	For: Beds 									|	Requires:	Empty Animation Attribute + Heal	Optional Conditions 
+16	=	Slot/Combine	|	For: Socket Objects which require an item	|	Requires:	Insertslots
+17	=	|
+18	=	|
+19	=	|
+20	=	|
+21	=	|
+22	=	|
+23	=	Combine			|	For: Items/Crafting
+24	=	Climb			|	For: Ladders
+25	=	|
+26	=										|	OnDestroyAction
+27	=	|
+28	=	|
+29	=	|
+30	=	Read(Learn)		|	For: Books which give you Alchemy recipies
+31	=	Consume			|	For: Tadpole Jars
+32	=	|
+33	=	|
+34	=	|
+35	=	|
+-->
+				
+			</children>
+		</node>
+	</region>
+</save>

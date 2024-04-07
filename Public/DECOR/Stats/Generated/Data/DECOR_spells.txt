@@ -1,0 +1,28 @@
+// Spells are just for assigning ID. They do not summon themselves
+// This is done through the library DecorObjects{}
+
+new entry "DECOR_Test"
+type "SpellData"
+data "SpellType" "Target"
+data "SpellProperties" "GROUND;"
+data "SpellContainerID" "DECOR_OBJECTS"
+data "Icon" "InteractItem_Chair"
+data "DisplayName" "ha5c318c8g99b2g4b24ga50cgd1d2a96cc527"
+data "Description" "h6fa26361g4de7g4593gbdd8g3ce358745d43"
+data "TargetConditions" "CanStand('')  and not Character() and not Self()"
+data "CastSound" "Spell_Cast_Utility_DimensionDoor_L4to5"
+data "TargetSound" "Spell_Impact_Utility_DimensionDoor_L4to5"
+data "SpellFlags" "ImmediateCast;IsLinkedSpellContainer"
+
+new entry "Froggy Chair"
+type "SpellData"
+data "SpellType" "Target"
+data "SpellProperties" "GROUND;"
+data "SpellContainerID" "DECOR_OBJECTS"
+data "Icon" "InteractItem_Chair"
+data "DisplayName" "h56e77cd4gd253g4a32g9cd2g1e5572124724"
+data "Description" "hdbb47837g8f0cg42e4g8b8fgde193dd54c10"
+data "TargetConditions" "CanStand('')  and not Character() and not Self()"
+data "CastSound" "Spell_Cast_Utility_DimensionDoor_L4to5"
+data "TargetSound" "Spell_Impact_Utility_DimensionDoor_L4to5"
+data "SpellFlags" "ImmediateCast;IsLinkedSpellContainer"
