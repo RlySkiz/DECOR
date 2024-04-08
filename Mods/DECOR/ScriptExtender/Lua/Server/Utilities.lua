@@ -1,3 +1,14 @@
+----------------------------------------------------------------------------------------
+--                                                                                    --       
+--                                   Utilities.lua                                    --
+--                                                                                    --
+--                      Useful functions to make life easier                          --
+--                                                                                    --
+--                                                                                    --
+----------------------------------------------------------------------------------------
+
+
+-- necessary for hot loading
 function ReloadStats()
     Ext.Stats.LoadStatsFile("Public/DECOR/Stats/Generated/Data/DECOR_objects.txt", 0)
     Ext.Stats.LoadStatsFile("Public/DECOR/Stats/Generated/Data/DECOR_spells_util.txt", 0)
@@ -35,12 +46,14 @@ function containsValue(map, item)
 end
 
 
+-- unique mapkey is returned by "UsingSpellOnTarget"
 function getUUIDByUniqueMapkey(uniqueMapkey)
 
     local startPosition = #uniqueMapkey - 35
     local uuid = string.sub(uniqueMapkey, startPosition)
     return uuid
 end
+
 
 function getNameByUniqueMapkey(uniqueMapkey)
     local endPosition = #uniqueMapkey - 37
@@ -72,6 +85,7 @@ end
 --- This is for checking entries within a table which holds tables of entries, which can be accessed with entry.name
 -- @param name          Name of the spell/object to check
 -- @param persVariable  Which persistantVariable to check
+-- @return              Whether the spell is loaded
 function isSpellLoadedObject(name, persVariable)
     if persVariable then
         for _, entry in ipairs(persVariable) do
@@ -85,6 +99,11 @@ function isSpellLoadedObject(name, persVariable)
     end
 end
 
+
+--- Returns matching MapKey for spellName
+-- @param name          Name of the spell/object to check
+-- @param persVariable  Which persistantVariable to check
+-- @return              Mapkey matching the spell
 function getMapKeyBySpell(name, persVariable)
     if isSpellLoadedObject(name, persVariable) then
         for _, entry in ipairs(persVariable) do

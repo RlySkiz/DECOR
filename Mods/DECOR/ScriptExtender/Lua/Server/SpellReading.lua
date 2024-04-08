@@ -1,12 +1,24 @@
+----------------------------------------------------------------------------------------
+--                                                                                    --
+--                                 SpellReading.lua                                   --
+--                                                                                    --
+--                       Adds the custom objects to DECOR                             --
+--                                                                                    --
+--                                                                                    --
+----------------------------------------------------------------------------------------
 
--- Loaded from additional mods
+
+-- PersistentVars['addedSpells'] saves spellName/UUID combinationa Loaded from additional mods
 function getAddedSpells()
     return PersistentVars['addedSpells']
 end
 
 
+-- read custom objects into DECOR
+-- TODO: Remove Debug prints when tested enough. 
 function OnSessionLoaded()
 
+    -- [DEBUG]
     print("[DECOR] Initialize Spellcheck")
 
     -- initiate addedSpells
@@ -14,7 +26,7 @@ function OnSessionLoaded()
         PersistentVars['addedSpells'] = {}
     end
 
-    -- Print the content of PersistentVars 
+    -- [DEBUG] - Print the content of PersistentVars 
     print("[DECOR] Content of PersistentVars:")
     for _, entry in ipairs(PersistentVars['addedSpells']) do
         print("[DECOR] Name:", entry.name, "MapKey:", entry.mapKey)
@@ -28,6 +40,7 @@ function OnSessionLoaded()
     end
 
 
+    -- Read in spells and uuid
     for i,spell in pairs(Ext.Stats.GetStats("SpellData"))do 
 
         local name = Ext.Stats.Get(spell).Name
@@ -49,30 +62,11 @@ function OnSessionLoaded()
                     local spellEntry = {name = name, mapKey = mapKey}
                     table.insert(PersistentVars['addedSpells'], spellEntry)
 
-                    -- print("Content of persistentVars[addedSpells]")
-                    -- for _, item in pairs(getAddedSpells()) do
-                    --     print(item)
-                    -- end
-
-                    -- -- Print the content of PersistentVars['addedSpells']
-                    -- print("Content of PersistentVars['addedSpells']")
-                    -- for _, entry in ipairs(PersistentVars['addedSpells']) do
-                    --     print("Name:", entry.name, "MapKey:", entry.mapKey)
-                    -- end
-
-
+                    -- [DEBUG]
                     print("[DECOR] Content of PersistentVars after loading new objects:")
                     for _, entry in ipairs(PersistentVars['addedSpells']) do
                         print("[DECOR] Name:", entry.name, "MapKey:", entry.mapKey)
                     end
-
-                else
-                    -- print("Content of persistentVars[addedSpells]")
-                    -- for _, item in pairs(getAddedSpells()) do
-                    --     print(item)
-                    -- end
-
-                    -- Print the content of PersistentVars['addedSpells']
 
                 end
 
@@ -81,5 +75,6 @@ function OnSessionLoaded()
     end
 
 end
+
 
 Ext.Events.SessionLoaded:Subscribe(OnSessionLoaded)

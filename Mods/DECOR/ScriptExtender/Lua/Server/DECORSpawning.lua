@@ -1,29 +1,36 @@
--- refresh spells (used for hot loading)
--- ReloadStats()
+----------------------------------------------------------------------------------------
+--                                                                                    --
+--                                 DECORSpawning.lua                                  --
+--                                                                                    --
+--                   Spawning, Deletion and Saving of spawned objects                 --
+--                                                                                    --
+--                                                                                    --
+----------------------------------------------------------------------------------------
+
 
 function getSpawnedItems()
     return PersistentVars['spawnedItems']
 end
 
 
--- cleans up all spawned items  
+-- Cleans up all spawned items or prepares mod for uninstalls  
 Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster,spell, _, _, _)
 
     if spell == "AAAA_UNINSTALL" or spell == "AAA_CleanUp" then
         
-
         if getSpawnedItems() then
             for _, item in pairs(getSpawnedItems()) do
                 Osi.RequestDelete(item)
             end
         end
 
+
         if spell == "AAAA_UNINSTALL" then  
             PersistentVars['spawnedItems'] = nil
             PersistentVars['addedSpells'] = nil
 
 
-            -- TODO - make variable for multiple containers
+            -- TODO - make variable for multiple (custom) containers
             local container = Ext.Stats.Get("DECOR_OBJECTS")
 
             container.ContainerSpells = ""
@@ -31,12 +38,10 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster,spell, _, 
 
         end
     end
-
-
-
 end)
 
 
+-- Deletes one item or locks/unlocks movement
 Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(_, target, spell, _, _, _)
 
     -- UsingSpellOnTarget returns unique mapkey
@@ -71,11 +76,13 @@ end)
 
 -- Furniture Spawning
 Ext.Osiris.RegisterListener("UsingSpellAtPosition", 8, "after", function(_, x, y, z, spell, _, _, _)
+
     -- initiate spawnedItems
     if not PersistentVars['spawnedItems'] then
         PersistentVars['spawnedItems'] = {}
     end
     
+    -- Console print in case user used spawning spell after using uninstall spell 
     if not getAddedSpells() then
         print("[DECOR] [DECOR] [DECOR] [DECOR] [DECOR]")
         print("[DECOR] You probably used the UNINSTALL spell.")
@@ -85,8 +92,7 @@ Ext.Osiris.RegisterListener("UsingSpellAtPosition", 8, "after", function(_, x, y
         return
     end
     
-    -- Iterate over each spell entry
-    -- Check if the current spell matches the spell in the entry
+    -- spawning 
     local mapKey = getMapKeyBySpell(spell, getAddedSpells())
     if mapKey then
         local spawnedObject = Osi.CreateAt(mapKey, x, y, z, 1, 0, "")
