@@ -112,4 +112,3 @@ Ext.Osiris.RegisterListener("UsingSpellAtPosition", 8, "after", function(_, x, y
     end
 end)
 
-

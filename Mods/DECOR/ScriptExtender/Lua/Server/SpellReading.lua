@@ -44,31 +44,27 @@ function OnSessionLoaded()
 
         if mapKey and containerID and getPrefix(containerID) == "DECOR" then
             
-                local container = Ext.Stats.Get(containerID)
-                local spellsInContainer = container.ContainerSpells
+            local container = Ext.Stats.Get(containerID)
+            local spellsInContainer = container.ContainerSpells
 
-                -- only add spell if it isn't already in container
-                if string.find(spellsInContainer, name, 1, true) == nil then   
-                    print("[DECOR] Adding", name, "with MapKey:", mapKey, " to chosen container.")
-                    container.ContainerSpells = spellsInContainer..";" .. name
-                    container:Sync()
+            -- only add spell if it isn't already in container
+            if string.find(spellsInContainer, name, 1, true) == nil then   
+                print("[DECOR] Adding", name, "with MapKey:", mapKey, " to chosen container.")
+                container.ContainerSpells = spellsInContainer..";" .. name
+                container:Sync()
 
-                    -- Adding spell information to Map
+                -- Adding spell information to Map
 
-                    AddedSpells[name] = mapKey
+                AddedSpells[name] = mapKey
 
-                     -- [DEBUG] - Print the content of AddedSpells
-                    print("[DECOR] Content of AddedSpells:")
-                    for name, mapKey in pairs(AddedSpells) do
-                        print("[DECOR] Name:", name, "MapKey:", mapKey)
-                    end
-
+                    -- [DEBUG] - Print the content of AddedSpells
+                print("[DECOR] Content of AddedSpells:")
+                for name, mapKey in pairs(AddedSpells) do
+                    print("[DECOR] Name:", name, "MapKey:", mapKey)
                 end
-
+            end
         end
-        
     end
-
 end
 
 
