@@ -13,10 +13,18 @@ function getSpawnedItems()
 end
 
 
--- Cleans up all spawned items or prepares mod for uninstalls  
-Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster,spell, _, _, _)
+function removeFromSpawnedItems(item)
+    if contains(getSpawnedItems(), item) then
+        Osi.RequestDelete(item)
+        table.remove(getSpawnedItems(), getIndex(getSpawnedItems(),item))
+    end
+end
 
-    if spell == "AAAA_UNINSTALL" or spell == "AAA_CleanUp" then
+
+-- Cleans up all spawned items or prepares mod for uninstalls  
+Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(_,spell, _, _, _)
+
+    if spell == "A_UNINSTALL_ALL" or spell == "Cleanup_ALL" then
         
         if getSpawnedItems() then
             for _, item in pairs(getSpawnedItems()) do
@@ -25,23 +33,16 @@ Ext.Osiris.RegisterListener("UsingSpell", 5, "after", function(caster,spell, _, 
         end
 
 
-        if spell == "AAAA_UNINSTALL" then  
+        if spell == "A_UNINSTALL_ALL" then  
             PersistentVars['spawnedItems'] = nil
-            PersistentVars['addedSpells'] = nil
-
-
-            -- TODO - make variable for multiple (custom) containers
-            local container = Ext.Stats.Get("DECOR_OBJECTS")
-
-            container.ContainerSpells = ""
-            container:Sync()
+            deleteAllObjectSpells()
 
         end
     end
 end)
 
 
--- Deletes one item or locks/unlocks movement
+-- Locks/unlocks movement or uninstall one object
 Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(_, target, spell, _, _, _)
 
     -- UsingSpellOnTarget returns unique mapkey
@@ -49,18 +50,23 @@ Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(_, target
 
     local targetID = getUUIDByUniqueMapkey(target)
 
-    --Clean up single item if it is furniture
-    if spell == "AA_CleanUp_One" then
-        local name = getNameByUniqueMapkey(target)
+    -- Remove one mod from spawnedItems and setAddedSpells
+    if spell == "A_UNINSTALL_TARGET" then
+    
+        local mapKeyToBeRemoved =  getMapkeyFromUniqueMapkey(target)
 
-        if contains(getSpawnedItems(), targetID) then
-            Osi.RequestDelete(targetID)
-            table.remove(getSpawnedItems(), getIndex(getSpawnedItems(),targetID))
+        local spawnedItems = getSpawnedItems()
+        for i = #spawnedItems, 1, -1 do
+            if getMapkeyFromUniqueMapkey(spawnedItems[i]) == mapKeyToBeRemoved then
+                Osi.RequestDelete(spawnedItems[i])
+                table.remove(spawnedItems, i)
+            end
         end
+        deleteObjectSpell(getKeyByValue(getAddedSpells(), mapKeyToBeRemoved))
     end
 
-    -- Toggle movement on chosen furniture
-    if spell == "A_Toggle_Movement" then
+    -- Toggle movement on chosen object
+    if spell == "Toggle_Movement" then
         if contains(getSpawnedItems(), targetID) then
             local isMovable = Osi.IsMovable(targetID)
             if isMovable == 0 then
@@ -72,17 +78,24 @@ Ext.Osiris.RegisterListener("UsingSpellOnTarget", 6, "after", function(_, target
     end
 end)
 
+-- Delete targeted objects
+Ext.Osiris.RegisterListener("StatusApplied", 4, "after", function(object, status, _, _)
+    if status == "DELETING" then
+        local targetID = getUUIDByUniqueMapkey(object)
+        removeFromSpawnedItems(targetID)
+    end
+end)
 
-
--- Furniture Spawning
+-- Object Spawning
 Ext.Osiris.RegisterListener("UsingSpellAtPosition", 8, "after", function(_, x, y, z, spell, _, _, _)
 
-    -- initiate spawnedItems
+    -- Initiate spawnedItems
     if not PersistentVars['spawnedItems'] then
         PersistentVars['spawnedItems'] = {}
     end
     
-    -- Console print in case user used spawning spell after using uninstall spell 
+    -- Console print in case user somehow used spawning spell after using uninstall spell 
+    -- TODO - This should not print anymore unless something goes terribly wrong
     if not getAddedSpells() then
         print("[DECOR] [DECOR] [DECOR] [DECOR] [DECOR]")
         print("[DECOR] You probably used the UNINSTALL spell.")
@@ -92,10 +105,11 @@ Ext.Osiris.RegisterListener("UsingSpellAtPosition", 8, "after", function(_, x, y
         return
     end
     
-    -- spawning 
-    local mapKey = getMapKeyBySpell(spell, getAddedSpells())
-    if mapKey then
-        local spawnedObject = Osi.CreateAt(mapKey, x, y, z, 1, 0, "")
-        table.insert(PersistentVars['spawnedItems'], spawnedObject) 
+    -- Spawning
+    if getAddedSpells()[spell] then
+        local spawnedObjects = Osi.CreateAt(getAddedSpells()[spell], x, y, z, 1, 0, "")
+        table.insert(getSpawnedItems(), spawnedObjects)
     end
 end)
+
+

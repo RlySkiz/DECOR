@@ -1,0 +1,5 @@
+new entry "DECOR_Template"
+type "Object"
+data "RootTemplate" "e8bf7c56-6446-43ff-b99a-87da060db486"
+data "Vitality" "-1"
+data "Weight" ""

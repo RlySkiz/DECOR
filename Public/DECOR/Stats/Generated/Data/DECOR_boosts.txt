@@ -1,0 +1,4 @@
+new entry "DELETING"
+type "StatusData"
+data "StatusType" "BOOST"
+data "StackId" "DELETING"

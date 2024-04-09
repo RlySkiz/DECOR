@@ -7,41 +7,36 @@
 --                                                                                    --
 ----------------------------------------------------------------------------------------
 
+-- Map addedSpells saves spellName/UUID combination Loaded from additional mods
+local AddedSpells
 
--- PersistentVars['addedSpells'] saves spellName/UUID combinationa Loaded from additional mods
 function getAddedSpells()
-    return PersistentVars['addedSpells']
+    return AddedSpells
+end
+
+function setAddedSpells(value)
+    AddedSpells = value
 end
 
 
+
 -- read custom objects into DECOR
--- TODO: Remove Debug prints when tested enough. 
+-- TODO - Remove Debug prints when tested enough. 
 function OnSessionLoaded()
 
     -- [DEBUG]
     print("[DECOR] Initialize Spellcheck")
 
+    -- Purge all DECOR_Containers (this solves a lot of issues)
+    purgeObjectSpells()
+
     -- initiate addedSpells
-    if not PersistentVars['addedSpells'] then
-        PersistentVars['addedSpells'] = {}
+    if not AddedSpells then
+        AddedSpells = {}
     end
-
-    -- [DEBUG] - Print the content of PersistentVars 
-    print("[DECOR] Content of PersistentVars:")
-    for _, entry in ipairs(PersistentVars['addedSpells']) do
-        print("[DECOR] Name:", entry.name, "MapKey:", entry.mapKey)
-    end
-     
-    print("[DECOR] Current Spells within 'DECOR_OBJECTS'-SpellContainer:")
-    if Ext.Stats.Get("DECOR_OBJECTS").ContainerSpells ~= "" then
-        print("[DECOR]", Ext.Stats.Get("DECOR_OBJECTS").ContainerSpells)
-    else
-        print("[DECOR] DECOR_OBJECTS is empty.")
-    end
-
 
     -- Read in spells and uuid
-    for i,spell in pairs(Ext.Stats.GetStats("SpellData"))do 
+    for _,spell in pairs(Ext.Stats.GetStats("SpellData"))do 
 
         local name = Ext.Stats.Get(spell).Name
         local mapKey = Ext.Stats.Get(spell).ExtraDescription
@@ -58,14 +53,14 @@ function OnSessionLoaded()
                     container.ContainerSpells = spellsInContainer..";" .. name
                     container:Sync()
 
-                    -- Adding spell information to PersVars
-                    local spellEntry = {name = name, mapKey = mapKey}
-                    table.insert(PersistentVars['addedSpells'], spellEntry)
+                    -- Adding spell information to Map
 
-                    -- [DEBUG]
-                    print("[DECOR] Content of PersistentVars after loading new objects:")
-                    for _, entry in ipairs(PersistentVars['addedSpells']) do
-                        print("[DECOR] Name:", entry.name, "MapKey:", entry.mapKey)
+                    AddedSpells[name] = mapKey
+
+                     -- [DEBUG] - Print the content of AddedSpells
+                    print("[DECOR] Content of AddedSpells:")
+                    for name, mapKey in pairs(AddedSpells) do
+                        print("[DECOR] Name:", name, "MapKey:", mapKey)
                     end
 
                 end

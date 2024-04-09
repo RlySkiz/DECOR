@@ -1,29 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <contentList>
 
+    <!-- Danger Zone -->
+
+    <content contentuid="he07e1b01ga3f0g4199ga4ccg1838e08b04e0" version="1">[DECOR] - Danger Zone</content>
+    <content contentuid="hdaa1bb51gb529g44a9gbdcagf4c2ef804e2a" version="1">Spells in here can cause irreversible changes. Read their descriptions carefully!</content>
+
+    <content contentuid="h956224a9ga931g4ccag814agc04af37d07de" version="1">UNINSTALL [DECOR]</content>
+    <content contentuid="h3df63cb8gc400g4f19g974cg9f43364dd841" version="1">Removes all persistent lists of the [DECOR] mod for THIS savefile, so [DECOR] and all mods using it, can be savely removed from the game. SAVE YOUR GAME!</content>
+
+    <content contentuid="h75b8719bge0c3g4752ga11agd88eb8e63a5c" version="1">UNINSTALL TARGETED OBJECT</content>
+    <content contentuid="he01f40c1g22abg452cg84abg61d3fb528225" version="1">Removes all spawned instances of a chosen object and removes its spell from [DECOR] containers for THIS savefile, so the objects mod can be savely removed from the game. SAVE YOUR GAME!</content>
+
+    <content contentuid="h0a6a590ag760cg44b0g8c4fgab380f94a9e8" version="1">Cleanup ALL</content>
+    <content contentuid="hdc0a547cga88cg4b37g8361g9aa5da0a80ae" version="1">Removes all spawned objects and their possible debris.</content>
+
     <!-- Util -->
 
-    <content contentuid="h6d724af4gd6a4g482cgafe7gc387ebf3f599" version="1">UNINSTALL INSTRUCTIONS</content>
-    <content contentuid="h20da1db9g3259g4fe9gae59gbee1b476d1f6" version="1">Use either THIS spell or Cleanup All once before removing the mod from your load order, to purge stored gameobject data. Dont spawn any more objects after this, otherwise you won't be able to load your save again!</content>
+    <content contentuid="h35fc3e28g83e9g4207gb8e7gdff6d29ed85c" version="1">[DECOR] - Utils</content>
+    <content contentuid="hc09a72efgd1acg42f3g874agab177a42ae0d" version="1">Need a clean up or is your favourite object always falling over?</content>
 
-    <content contentuid="hc7a70aacg57d2g4238gb6a4g60e8e1be86e1" version="1">DECOR - Utils</content>
-    <content contentuid="hededdd5dgaef1g49c8ga338gec2cbd786b36" version="1">Need a clean up or is your favourite chair always falling over?</content>
+    <content contentuid="h219ed949gd307g4c7eg8b5bg6f4fad2bd867" version="1">Cleanup Targets</content>
+    <content contentuid="hab945b7fgbcb0g4e86gb87dgffef0c9341ed" version="1">Removes spawned objects of your choosing.</content>
 
-    <content contentuid="hd106de78gde49g47bfg8998g505c06bfcc22" version="1">Cleanup ALL</content>
-    <content contentuid="hf33e86c8g49fag46c7gb6cag333d1148e35d" version="1">Removes all spawned objects and possible debris.</content>
-
-    <content contentuid="h1834935eg0e79g4e17g9cceg9c81e1cf97bb" version="1">Cleanup Target</content>
-    <content contentuid="hda8c47cagaa29g497ega85fg6296b189a391" version="1">Deletes targeted object.</content>
-
-    <content contentuid="he3674ffagf5c7g444eg8aadg2f98d5b67a19" version="1">Lock Object</content>
-    <content contentuid="h4b071a48g3b3ag45cdga64fg5e824e05b36c" version="1">Locks the selected object in place.</content>
+    <content contentuid="h44f6155ag08d2g488bg84adg83cc6d261452" version="1">Lock/Unlock Object</content>
+    <content contentuid="h3a4bd269gd818g4514g95a0g39c6bf6309f2" version="1">Locks/Unlocks a spawned object so it can/cannot be moved.</content>
 
     <!-- Custom Objects -->
-    
-    <content contentuid="ha5c318c8g99b2g4b24ga50cgd1d2a96cc527" version="1">DECOR_Test</content>
-    <content contentuid="h6fa26361g4de7g4593gbdd8g3ce358745d43" version="1">Spawns a test object.</content>
 
-    <content contentuid="h56e77cd4gd253g4a32g9cd2g1e5572124724" version="1">Froggy Chair</content>
-    <content contentuid="hdbb47837g8f0cg42e4g8b8fgde193dd54c10" version="1">Ribbit.</content>
-    
+    <content contentuid="hc7e6ffe1g9899g4c7cgabaegb9e789ff89cc" version="1">[DECOR] - Objects</content>
+    <content contentuid="h7f239852g3278g4f8bga92eg44b3da34b43b" version="1">The default object container of [DECOR].</content>
+
 </contentList>
+
+
+
+
+
+
+
+

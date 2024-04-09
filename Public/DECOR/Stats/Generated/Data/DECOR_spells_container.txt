@@ -1,0 +1,14 @@
+// This file will list available container to choose from
+
+new entry "DECOR_OBJECTS"
+type "SpellData"
+data "SpellType" "Shout"
+data "ContainerSpells" ""
+data "Requirements" "!Combat"
+data "Icon" "InteractItem_Chair"
+data "DisplayName" "hc7e6ffe1g9899g4c7cgabaegb9e789ff89cc"
+data "Description" "h7f239852g3278g4f8bga92eg44b3da34b43b"
+data "CastSound" "Spell_Cast_Utility_DimensionDoor_L4to5"
+data "TargetSound" "Spell_Impact_Utility_DimensionDoor_L4to5"
+data "AIFlags" "CanNotUse"
+data "SpellFlags" "IsLinkedSpellContainer"

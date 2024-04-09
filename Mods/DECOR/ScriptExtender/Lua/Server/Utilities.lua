@@ -7,15 +7,20 @@
 --                                                                                    --
 ----------------------------------------------------------------------------------------
 
-
--- necessary for hot loading
+-- Necessary for hot loading
 function ReloadStats()
-    Ext.Stats.LoadStatsFile("Public/DECOR/Stats/Generated/Data/DECOR_objects.txt", 0)
+    Ext.Stats.LoadStatsFile("Public/DECOR/Stats/Generated/Data/DECOR_boosts.txt", 0)
+    Ext.Stats.LoadStatsFile("Public/DECOR/Stats/Generated/Data/DECOR_templates.txt", 0)
     Ext.Stats.LoadStatsFile("Public/DECOR/Stats/Generated/Data/DECOR_spells_util.txt", 0)
-    Ext.Stats.LoadStatsFile("Public/DECOR/Stats/Generated/Data/DECOR_spells.txt", 0)
+    Ext.Stats.LoadStatsFile("Public/DECOR/Stats/Generated/Data/DECOR_spells_danger.txt", 0)
+    Ext.Stats.LoadStatsFile("Public/DECOR/Stats/Generated/Data/DECOR_spells_container.txt", 0)
 end
 
--- get index by item directly
+----------------------------------------------------------------------------------------
+
+-- TODO - Clean up this mess
+
+-- Get index by item directly
 function getIndex(list, item)
     for i, object in ipairs(list) do
         if object == item then
@@ -24,7 +29,8 @@ function getIndex(list, item)
     end
 end
 
--- for tables
+
+-- For tables
 function contains(list, item)
     for i, object in ipairs(list) do
         if object == item then
@@ -35,7 +41,7 @@ function contains(list, item)
 end
 
 
--- for maps
+-- For maps
 function containsValue(map, item)
     for key, object in pairs(map) do
         if object == item then
@@ -46,7 +52,17 @@ function containsValue(map, item)
 end
 
 
--- unique mapkey is returned by "UsingSpellOnTarget"
+-- For maps
+function getKeyByValue(map, value)
+    for key, val in pairs(map) do
+        if val == value then
+            return key
+        end
+    end
+    return nil
+end
+
+-- uniqueMapkey is returned by "UsingSpellOnTarget"
 function getUUIDByUniqueMapkey(uniqueMapkey)
 
     local startPosition = #uniqueMapkey - 35
@@ -80,6 +96,19 @@ function getPropertyOrDefault(obj, propertyName, defaultValue)
         return defaultValue
     end
 end
+
+
+--- Retrieves the MapKey (visual) from uniqueMapkey
+-- @param uniqueMapkey  The handle
+-- @return              The GameObjectVisual RootTemplateID
+function getMapkeyFromUniqueMapkey(uniqueMapkey)
+    local entity = Ext.Entity.Get(uniqueMapkey) 
+    local mapkey = entity:GetComponent("GameObjectVisual").RootTemplateId
+    return mapkey
+end
+
+
+-- functions below are depreated for now (were used for persistentVars that save tables)
 
 --- Checks if spell/object is currently loaded or not
 --- This is for checking entries within a table which holds tables of entries, which can be accessed with entry.name
