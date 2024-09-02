@@ -1,0 +1,12 @@
+Ext.Require("Server/_constructor.lua")
+-- Initialize General Classes
+-- Ext.Require("Server/Classes/Object.lua")
+-- Ext.Require("Server/Classes/Scenery.lua")
+-- Ext.Require("Server/Classes/Actor.lua")
+-- Ext.Require("Server/Classes/Scene.lua")
+-- Ext.Require("Server/Classes/UserVars.lua")
+Ext.Require("Server/ToClientComms.lua")
+-- Ext.Require("Server/SpellReading.lua")
+-- Ext.Require("Server/SpellHandling.lua")
+-- Ext.Require("Server/DECORSpawning.lua")
+-- Ext.Require("Server/Utilities.lua")

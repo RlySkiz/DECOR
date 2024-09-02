@@ -1,7 +1,6 @@
-Ext.Require("Server/SpellReading.lua")
-Ext.Require("Server/SpellHandling.lua")
-Ext.Require("Server/DECORSpawning.lua")
-Ext.Require("Server/Utilities.lua")
+Ext.Require("Server/_init.lua")
+Ext.Require("Shared/_init.lua")
 
 -- Used for saving spawned objects
 PersistentVars = {}
+PersistentVars["Undo"] = {}
