@@ -1,8 +1,8 @@
 DECOR = {}
 DECOR.__index = DECOR
-DECOR.undoList = {}
 
 local devMode
+local deleteMode = false
 local function inDev()
     if devMode == true then
         return true
@@ -10,32 +10,34 @@ local function inDev()
         return false
     end
 end
+-- local function toggleDeleteMode()
+--     if deleteMode == true then
+--         return true
+--     else
+--         return false
+--     end
+-- end
+
+---------------------------------------------------------------------------------------------------
+--                                          Helper
+---------------------------------------------------------------------------------------------------
 
 local function stringContains(str, sub)
-    -- Helper function to remove spaces and convert to lowercase
     local function normalize(s)
         return s:gsub("%s+", ""):lower() -- Remove spaces and convert to lowercase
     end
-
-    -- Normalize the input string by removing spaces and converting to lowercase
     local normalizedStr = normalize(str)
-
-    -- Split the substring into words by space, normalize them, and check each one
     local words = {}
     for word in sub:gmatch("%S+") do
         table.insert(words, normalize(word))
     end
-
-    -- Check if all words are present in the normalized string
     for _, word in ipairs(words) do
         if not string.find(normalizedStr, word, 1, true) then
             return false
         end
     end
-
     return true
 end
-
 
 local function search(txt, tbl)
     for _,element in pairs(tbl) do
@@ -87,6 +89,10 @@ end
 --     for k, v in pairs(sortedTable) do t[k] = v end
 -- end
 
+---------------------------------------------------------------------------------------------------
+--                                          Data
+---------------------------------------------------------------------------------------------------
+
 local function getSortedRootTemplates()
     local sortedTemplates = {}
     local typeOrder = {}
@@ -120,7 +126,6 @@ local function getSortedRootTemplates()
     for _, type in ipairs(typeOrder) do
         finalSortedTemplates[type] = sortedTemplates[type]
     end
-
     return finalSortedTemplates
 end
 
@@ -135,12 +140,12 @@ local function buildInfo(template, parent)
     end
     local spawnButton = infoRow:AddCell():AddButton("Spawn")
     spawnButton.OnClick = function()
-        Ext.Net.PostMessageToServer("DECOR_SpawnObject", Ext.Json.Stringify({template = template.Id, how = "normal"}))
+        Ext.Net.PostMessageToServer("DECOR_SpawnObject", Ext.Json.Stringify({template = template.Id, weight = "normal"}))
     end
     local spawnWLButton = infoRow:AddCell():AddButton("Spawn Weightless/Movable")
     spawnWLButton.SameLine = true
     spawnWLButton.OnClick = function()
-        Ext.Net.PostMessageToServer("DECOR_SpawnObject", Ext.Json.Stringify({template = template.Id, how = "weightless"}))
+        Ext.Net.PostMessageToServer("DECOR_SpawnObject", Ext.Json.Stringify({template = template.Id, weight = "weightless"}))
     end
 end
 
@@ -196,6 +201,10 @@ local function valueChange(newVal, template, components)
     compVal = newVal
 end
 
+---------------------------------------------------------------------------------------------------
+--                                          Structure
+---------------------------------------------------------------------------------------------------
+
 local function buildComponents(template, parent)
     local origTemplate = Ext.Template.GetTemplate(template)
     destroyChildren(parent)
@@ -209,10 +218,10 @@ local function buildComponents(template, parent)
         for compname,compcont in pairs(componentContent) do
             if IsScalar(compcont) then
                 if type(compcont) == "string" then
-                    local comp = compArea:AddText(compname)
+                    local comp = compArea:AddText(compname .. ":")
                     local value = compArea:AddInputText("")
                     value.Text = compcont
-                    value.SameLine = true
+                    value.SameLine = false
 
                     local newValButton = compArea:AddButton("Save")
                     newValButton.SameLine = true
@@ -295,7 +304,61 @@ local function buildTemplateSide(parent)
     return populationAreas
 end
 
+local makeMovable = false
+local buildMode = false
+local lockMode = false
+local function dockerButtonFunction(button)
+    makeMovable = false
+    buildMode = false
+    lockMode = false
+    deleteMode = false
+    -- Regardless of which button is pressed, it sets all modes to false initially
+    if button == "Make Movable" then
+        makeMovable = true
+        return "Not yet implemented"
+    elseif button == "Build Mode" then
+        buildMode = true
+        return "Not yet implemented"
+    elseif button == "Undo" then
+        Ext.Net.PostMessageToServer("DECOR_Undo", "")
+        return
+    elseif button == "Redo" then
+        Ext.Net.PostMessageToServer("DECOR_Redo", "")
+        return
+    elseif button == "Lock Object" then
+        lockMode = true
+        return "Not yet implemented"
+    elseif button == "Delete Mode" then
+        deleteMode = true
+        return "Not yet implemented"
+    elseif button == "No Mode" then
+        return
+    end
+end
 
+local function buildBuildSection(parent)
+    local buttons = {"Make Movable", "Build Mode", "Undo", "Redo", "Lock Object", "Delete Mode", "No Mode"}
+    local docker = parent:AddTable("", #buttons)
+    local dockerRow = docker:AddRow()
+    local infoText = parent:AddText("")
+    infoText.Visible = false
+    for _,button in pairs(buttons) do
+        local dockerButton = dockerRow:AddCell():AddButton(button)
+        dockerButton.OnClick = function()
+            local info = dockerButtonFunction(button)
+            if info ~= nil then
+                infoText.Label = info
+                infoText.Visible = true
+            else
+                infoText.Visible = false
+            end
+        end
+    end
+end
+
+---------------------------------------------------------------------------------------------------
+--                                          General Tab
+---------------------------------------------------------------------------------------------------
 
 local function createModTab(tab)
     local dev = tab:AddCheckbox("Developer Mode")
@@ -308,13 +371,34 @@ local function createModTab(tab)
     searchbar.Text = "Search"
     -- searchbar.SameLine = true -- "dev" NYI
 
-    local undoButton = tab:AddButton("Undo")
-    undoButton.SameLine = true
-    undoButton.OnClick = function()
-        Ext.Net.PostMessageToServer("DECOR_Undo", "")
-        -- table.remove(DECOR.undoList, #DECOR.undoList) -- Remove latest entry
-    end
+    local dockerButtonBar = buildBuildSection(tab)
 
+    -- local undoButton = tab:AddButton("Undo")
+    -- undoButton.SameLine = true
+    -- undoButton.OnClick = function()
+    --     Ext.Net.PostMessageToServer("DECOR_Undo", "")
+    --     -- table.remove(DECOR.undoList, #DECOR.undoList) -- Remove latest entry
+    -- end
+
+    -- local deleteBox = tab:AddCheckbox("Delete Mode")
+    -- deleteBox.SameLine = true
+
+    -- local deleteHelpTable = tab:AddTable("",2)
+    -- local deleteHelpRow = deleteHelpTable:AddRow()
+    -- deleteHelpTable.Visible = false
+    -- local deleteHelp = deleteHelpRow:AddCell():AddText("Delete with Mouseover + F")
+    -- local deleteDisclaimer = deleteHelpRow:AddCell():AddText("Only works on spawned items")
+
+    
+    -- deleteBox.OnChange = function()
+    --     if deleteBox.Checked == true then
+    --         deleteMode = true
+    --         deleteHelpTable.Visible = true
+    --     else
+    --         deleteMode = false
+    --         deleteHelpTable.Visible = false
+    --     end
+    -- end
     
     local t = tab:AddTable("", 1)
     -- t.IDContext = "t"
@@ -353,6 +437,49 @@ local function createModTab(tab)
     end
 end
 
+---------------------------------------------------------------------------------------------------
+--                                          Mouseover
+---------------------------------------------------------------------------------------------------
+
+local function getMouseover()
+    local mouseover = Ext.UI.GetPickingHelper(1)
+    if mouseover ~= nil then
+    -- setSavedMouseover(mouseover)
+        return mouseover
+    else
+        _P("[DECOR] Not a viable mouseover!")
+    end 
+end
+
+local function getUUIDFromUserdata(mouseover)
+    local entity = mouseover.Inner.Inner[1].GameObject
+    if entity ~= nil then
+        return Ext.Entity.HandleToUuid(entity)
+    else
+        _P("[DECOR] getUUIDFromUserdata(mouseover) - Not an entity!")
+    end
+end
+
+Ext.Events.KeyInput:Subscribe(function (e)
+    if e.Event == "KeyDown" and e.Repeat == false then
+        if e.Key == "F" then
+            local uuid = getUUIDFromUserdata(getMouseover())
+            if makeMovable == true then
+                Ext.Net.PostMessageToServer("DECOR_RemoveObjectWeight", uuid)
+            elseif buildMode == true then
+                Ext.Net.PostMessageToServer("DECOR_SpawnObjectAtLocation", {uuid = uuid, location = getMouseover().Inner.Inner[1]}) -- need to find correct location component
+            elseif lockMode == true then
+                Ext.Net.PostMessageToServer("DECOR_LockObject", uuid)
+            elseif deleteMode == true then
+                Ext.Net.PostMessageToServer("DECOR_DeleteObject", uuid)
+            end
+        end
+    end
+end)
+
+---------------------------------------------------------------------------------------------------
+--                                       Load MCM Tab
+---------------------------------------------------------------------------------------------------
 
 Mods.BG3MCM.IMGUIAPI:InsertModMenuTab(ModuleUUID, "Object Browser", function(tab)
     createModTab(tab)
