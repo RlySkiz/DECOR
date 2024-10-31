@@ -343,14 +343,16 @@ local function buildBuildSection(parent)
     local infoText = parent:AddText("")
     infoText.Visible = false
     for _,button in pairs(buttons) do
-        local dockerButton = dockerRow:AddCell():AddButton(button)
-        dockerButton.OnClick = function()
-            local info = dockerButtonFunction(button)
-            if info ~= nil then
-                infoText.Label = info
-                infoText.Visible = true
-            else
-                infoText.Visible = false
+        local dockerButton = dockerRow:AddCell():AddRadioButton(button)
+        dockerButton.OnChange = function()
+            if dockerButton.Active == true then
+                local info = dockerButtonFunction(button)
+                if info ~= nil then
+                    infoText.Label = info
+                    infoText.Visible = true
+                else
+                    infoText.Visible = false
+                end
             end
         end
     end
@@ -412,8 +414,7 @@ local function createModTab(tab)
 
     local sortedTemplates = getSortedRootTemplates()
     for type,templates in pairs(sortedTemplates) do
-        local typeButton = tlT:AddRow():AddCell():AddButton(tostring(type))
-        
+        local typeButton = tlT:AddRow():AddCell():AddButton(tostring(type))        
         typeButton.OnClick = function()
             if t.Columns == 1 then
                 t.Columns = 2
